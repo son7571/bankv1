@@ -10,7 +10,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Repository
 public class AccountRepository {
-    private EntityManager em;
+    private final EntityManager em;
 
     public void save(Integer number, String password, Integer balance, int userId) {
         Query query = em.createNativeQuery("insert into account_tb(number, password, balance, user_id, created_at) values (?, ?, ?, ?, now())");
@@ -22,7 +22,7 @@ public class AccountRepository {
     }
 
     public List<Account> findAllByUserId(Integer userId) {
-        Query query = em.createNativeQuery("select * from account_tb where user_id = ? order by where created_et = ?", Account.class);
+        Query query = em.createNativeQuery("select * from account_tb where user_id = ? order by created_at desc", Account.class);
         query.setParameter(1, userId);
         return query.getResultList();
     }
