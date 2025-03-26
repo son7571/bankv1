@@ -53,12 +53,25 @@ public class AccountService {
         withdrawBalance = withdrawBalance - transferDTO.getAmount();
         accountRepository.updateByNumber(withdrawBalance, withdrawAccount.getPassword(), withdrawAccount.getNumber());
 
-        //6. Account update 입금계좌
+        //7. Account update 입금계좌
         int depositbalance = depositAccount.getBalance();
         depositbalance = depositbalance - transferDTO.getAmount();
         accountRepository.updateByNumber(depositbalance, depositAccount.getPassword(), depositAccount.getNumber());
 
         // 7. History Save
-        historyRepository.save(transferDTO.getWithdrawNumber(), transferDTO.getDepositNumber(), transferDTO.getAmount(), withdrawBalance);
+        historyRepository.save(transferDTO.getWithdrawNumber(), transferDTO.getDepositNumber(), transferDTO.getAmount(), withdrawBalance, depositbalance);
+    }
+
+    public void 계좌상세보기(int number, String type, Integer id) {
+        //1. 계좌 존재 확인
+        Account account = accountRepository.findByNumber(number);
+        if (account == null) throw new RuntimeException("계좌가 존재하지 않습니다");
+        //2. 계좌 주인 확인
+        if (!(account.getUserId().equals(id))) {
+            throw new RuntimeException("해당 계좌의 권한이 없습니다.");
+
+            //3. 조회해서 주면됨
+
+        }
     }
 }
