@@ -72,12 +72,13 @@ public class AccountController {
 
     // /account/1111?type=입금
     @GetMapping("account/{number}")
-    public String detail(@PathVariable("number") int number, @RequestParam(value = "type", required = false, defaultValue = "전체") String type) {
+    public String detail(@PathVariable("number") int number, @RequestParam(value = "type", required = false, defaultValue = "전체") String type,
+                         HttpServletRequest request) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         if (sessionUser == null) throw new RuntimeException("로그인후에 사용해주세요"); //공통 부가로직
-        accountService.계좌상세보기(number, type, sessionUser.getId());
-//        System.out.println("number = " + number);
-//        System.out.println("type = " + type);
+
+        List<AccountResponse.DetailDTO> detailList = accountService.계좌상세보기(number, type, sessionUser.getId());
+        request.setAttribute("models", detailList);
         return "account/detail";
     }
 
